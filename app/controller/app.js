@@ -22,6 +22,7 @@ function runFilterOnAllStockTickers() {
     }
 }
 
+
 function spawnNewProcessForFilter(stockObj) {
     let {stockTicker, stockName} = stockObj;
 
