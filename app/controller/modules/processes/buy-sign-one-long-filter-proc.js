@@ -1,10 +1,10 @@
 const MongoClient = require('mongodb').MongoClient;
 
 const argvExtractor = require('./moduls/argv-extractor/argv-extractor.js');
+const {sendErrMsgToParentProc} = require('../utils/utils.js');
 
 const buySignOneLongFilter = require('../filters/buy-signal-one-long-filter/buy-signal-one-long-filter.js');
 const checkIfStockSignalProperToSend = require('../filters/buy-signal-one-long-filter/moduls/check-if-stock-signal-proper-to-send/check-if-stock-signal-proper-to-send.js');
-const savePositiveSignalsIntoDb = require('../../../model/stock-tickers-with-signals-coll/save-positive-signals-into-db/save-positive-signals-into-db.js');
 const sendFilteredStockSignalEmailToZoltan = require('../send-email/send-stock-signal-email-to-zoltan/send-stock-signal-email-to-zoltan.js');
 
 const dbName = 'stock-data';
@@ -16,10 +16,9 @@ const stockName = processArgs.stockName;
 
 MongoClient.connect(dbUrl, { useNewUrlParser: true }, (err, client) => {
     if (err) throw err;
+    var db = client.db('stock-data');
 
-    var db = client.db('stockTtickersWithSignals')
-
-    runBuySignOneLongFilter(client, stockTicker, stockName)
+    runBuySignOneLongFilter(db, stockTicker, stockName)
     .then(() => {
         client.close();
     })
@@ -30,10 +29,7 @@ MongoClient.connect(dbUrl, { useNewUrlParser: true }, (err, client) => {
 
 function runBuySignOneLongFilter(db, stockTicker, stockName) {
     return new Promise((resolve, reject) => {
-        buySignOneLongFilter(stockTicker)
-        .then(filtersResults => {
-            return savePositiveSignalsIntoDb(db, stockTicker, filtersResults);
-        })
+        buySignOneLongFilter(db, stockTicker, stockName)
         .then(savedStockSignalObj => {
             let isStockSignalProperToSendObj = checkIfStockSignalProperToSend(savedStockSignalObj);
 
@@ -43,26 +39,26 @@ function runBuySignOneLongFilter(db, stockTicker, stockName) {
                 sendFilteredStockSignalEmailToZoltan(savedStockSignalObj, currStockSignalsObj, stockSignalsFromLast5Days, stockName)
                 process.stdout.write(`success email sent for ${stockTicker}`);
                 process.stdout.write('--------------------------');
-                resolve()
+                resolve();
             } else {
-                process.stderr.write(isStockSignalProperToSendObj)
-                resolve()
+                sendErrMsgToParentProc(isStockSignalProperToSendObj)
+                resolve();
             }
         })
         .catch(e => {
             if (e.message) {
-                process.stderr.write(e.message);
-                reject()
+                sendErrMsgToParentProc(e.message);
+                reject();
             } else if (e.errmsg) {
-                process.stderr.write(e.errmsg);
-                reject()
+                sendErrMsgToParentProc(e.errmsg);
+                reject();
             } else if (e.errLink) {
                 let msg = `wrong link: ${e.errLink}\n-------------------------`
-                process.stderr.write(msg);
-                reject()
+                sendErrMsgToParentProc(msg);
+                reject();
             } else {
-                process.stderr.write(JSON.stringify(e, null, 2));
-                reject()
+                sendErrMsgToParentProc(e);
+                reject();
             }
 
             process.stderr.write('--------------------------');

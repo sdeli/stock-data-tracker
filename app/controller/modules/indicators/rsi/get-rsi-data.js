@@ -8,7 +8,7 @@ function getRsiData(stockTicker, interval, options) {
 }
 
 function getRsiReqUrl(stockTicker, interval, options) {
-    let rsiReqUrl = `https://www.alphavantage.co/query?function=RSI&symbol=${stockTicker}&interval=${interval}&time_period=10&time_period=${options.timePeriod}&series_type=${options.seriesType}&apikey=demo`;
+    let rsiReqUrl = `https://www.alphavantage.co/query?function=RSI&symbol=${stockTicker}&interval=${interval}&time_period=${options.timePeriod}&series_type=${options.seriesType}&apikey=demo`;
     
     return rsiReqUrl;         
 }

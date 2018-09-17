@@ -5,7 +5,7 @@ const composeMsgForEmail = require('./moduls/compose-msg-for-email/compose-msg-f
 function sendFilteredStockSignalEmailToZoltan(savedStockSignalObj, currStockSignalsObj, stockSignalsFromLast5Days, stockName) {
     let stockTicker = savedStockSignalObj.stockTicker
 
-    let subject = `signal for: ${stockTicker} - ${stockName}`;
+    let subject = `signal for: ${stockTicker} - ${stockName} - buy signal`;
     let msg = composeMsgForEmail(stockTicker, currStockSignalsObj, stockSignalsFromLast5Days);
     msg += `\n\n\nRaw Data: ${JSON.stringify(savedStockSignalObj, null, 2)}`;
 

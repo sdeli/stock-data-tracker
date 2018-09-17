@@ -8,47 +8,72 @@ const stocksArr = JSON.parse(fs.readFileSync('./assets/zolis-stock-tickers-for-u
 const dbName = 'stock-data';
 const dbUrl = `mongodb://localhost:27017/${dbName}`;
 
-let i = 2;
+let stockIterator = 0;
 
-function runFilterOnAllStockTickers() {
-    if (i < stocksArr.length) {
+function startApp() {
+    startApyKeyIpPortfeederServer();
+    runFilterOnAllStockTickers(stockIterator);
+}
+
+function startApyKeyIpPortfeederServer() {
+    let program = 'node';
+    let parameters = [
+        './modules/api-and-ip-feeder/api-and-ip-feeder-server.js',
+    ];
+
+    let child = spawn(program, parameters);
+
+    child.on('exit', () => {
+      console.log('server closed');
+    });
+
+    child.stdout.on('data', data => {
+      console.log(`message from server: ${data.toString()}`);
+    });
+
+    child.stderr.on('data', data => {
+        console.log(`message from server: ${data.toString()}`);
+    });
+}
+
+function runFilterOnAllStockTickers(stockIterator) {
+    if (stockIterator < stocksArr.length) {
         console.log('------------------');
-        console.log('i: ' + i);
+        console.log(`${stockIterator} - ${stocksArr[stockIterator].stockTicker}  `);
         
-        i++;
-        spawnNewProcessForFilter(stocksArr[i]);
+        spawnNewProcessForFilter(stocksArr[stockIterator], stockIterator);
     } else {
         console.log('all stocks have been checked');
     }
 }
 
 
-function spawnNewProcessForFilter(stockObj) {
+function spawnNewProcessForFilter(stockObj, stockIterator) {
     let {stockTicker, stockName} = stockObj;
 
     let program = 'node';
     let parameters = [
-         // '--inspect-brk',
+        // '--inspect-brk',
         './modules/processes/buy-sign-one-long-filter-proc.js',
         `stockTicker=${stockTicker}`,
         `stockName=${stockName}`
-
     ];
 
     let child = spawn(program, parameters);
 
     child.on('exit', () => {
       console.log('process closed');
-      runFilterOnAllStockTickers()
+      stockIterator++
+      runFilterOnAllStockTickers(stockIterator)
     });
 
     child.stdout.on('data', data => {
-      console.log(data.toString());
+      console.log(`${stockIterator} msg: ${data.toString()}`);
     });
 
     child.stderr.on('data', data => {
-        console.log(data.toString());
+        console.log(`${stockIterator} err: ${data.toString()}`);
     });
 }
 
-runFilterOnAllStockTickers(0);
+startApp();

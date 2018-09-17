@@ -1,32 +1,38 @@
+const {sendErrMsgToParentProc} = require('../../utils/utils.js');
+
 const getCciData = require('../../indicators/cci/get-cci-data.js');
 const getMacdData = require('../../indicators/macd/get-macd-data.js');
 const getOhlcv = require('../../indicators/open-high-low-close/get-ohlcv.js');
-const getUltoscData = require('../../indicators/ultosc/get-ultosc-data.js');
+// const getUltoscData = require('../../indicators/ultosc/get-ultosc-data.js');
 const getRsiData = require('../../indicators/rsi/get-rsi-data.js');
 const getStochSlowData = require('../../indicators/stoch-slow/get-stoch-slow-data.js');
 const getPrevAndMa50 = require('../../indicators/ma50/get-ma-50.js');
 
-const {checkIfClOver10DollarsInMa20, checkIfStocksVolumeIsEnough, macdConditionOne, macdConditionTwo,ultoscLongsCondition, ccisCondition, rsisCondition, stochSlowCondition, ma50sCondition, isCurrClOverCurrMa50} = require('./moduls/conditions/conditions.js')
+const runGetBearTrendlines = require('../../indicators/bear-trendlines/get-bear-trendlines.js')
+
+const {checkIfClOver10DollarsInMa20, checkIfStocksVolumeIsEnough, macdConditionOne, macdConditionTwo,ultoscLongsCondition, ccisCondition, rsisCondition, rsisSecondCondition, stochSlowCondition, ma50sCondition, isCurrClOverCurrMa50} = require('./moduls/conditions/conditions.js')
+
+const savePositiveSignalsIntoDb = require('../../../../model/stock-tickers-with-signals-coll/save-positive-signals-into-db/save-positive-signals-into-db.js');
 
 const {extractCurrAndPrevClFromOhlcvData, getPastSignalsIn5DaysForCurrStock} = require('../../filters/buy-signal-one-long-filter/moduls/helpers/helpers.js');
 
-function buySignOneLongFilter(stockTicker) {
+function buySignOneLongFilter(db, stockTicker, stockName) {
     return new Promise((resolve, reject) => {
         getOhlcv(stockTicker, 'TIME_SERIES_DAILY')
         .then(ohlcvDataObj => {
             let didStockPassPrefilter = preFilterStockData(ohlcvDataObj);
 
             if (didStockPassPrefilter === true) {
-                startfurtherFilters(stockTicker, ohlcvDataObj)
-                .then(filterResults => {
-                    resolve(filterResults);
-                })
-                .catch(e => {
-                    reject(e);
-                })
+               return startfurtherFilters(db, stockTicker, stockName, ohlcvDataObj);
             } else {
-                reject(wasPrefilteringSuccesful);
+                reject(didStockPassPrefilter);
             }
+        })
+        .then(filtersResults => {
+            return savePositiveSignalsIntoDb(db, stockTicker, filtersResults);
+        })
+        .then(savedStockSignalObj => {
+            resolve(savedStockSignalObj);
         })
         .catch(e => {
             reject(e);
@@ -44,8 +50,8 @@ function preFilterStockData(ohlcvDataObj) {
     return true;
 }
 
-function startfurtherFilters(stockTicker, ohlcvDataObj) {
-    process.stdout.write('start')
+function startfurtherFilters(db, stockTicker, stockName, ohlcvDataObj) {
+    process.stdout.write('start further filters')
     return new Promise((resolve, reject) => {
         let interval = 'daily';
 
@@ -79,25 +85,26 @@ function startfurtherFilters(stockTicker, ohlcvDataObj) {
         }
 
         Promise.all([
-            getCciData(stockTicker, interval, cciOptions).catch(e => process.stdout.write(e)),
-            getMacdData(stockTicker, interval, macdLongOpts).catch(e => process.stdout.write(e)),
-            getMacdData(stockTicker, interval, macdShortOpts).catch(e => process.stdout.write(e)),
-            getUltoscData(stockTicker, interval).catch(e => process.stdout.write(e)),
-            getRsiData(stockTicker, interval, rsiOptions).catch(e => process.stdout.write(e)),
-            getStochSlowData(stockTicker, interval).catch(e => process.stdout.write(e)),
-            getPrevAndMa50(stockTicker, interval, ma50Options).catch(e => process.stdout.write(e))
+            getCciData(stockTicker, interval, cciOptions).catch(e => sendErrMsgToParentProc(e)),
+            getMacdData(stockTicker, interval, macdLongOpts).catch(e => sendErrMsgToParentProc(e)),
+            getMacdData(stockTicker, interval, macdShortOpts).catch(e => sendErrMsgToParentProce(e)),
+            // getUltoscData(stockTicker, interval).catch(e => sendErrMsgToParentProc(e)),
+            getRsiData(stockTicker, interval, rsiOptions).catch(e => sendErrMsgToParentProc(e)),
+            getStochSlowData(stockTicker, interval).catch(e => sendErrMsgToParentProc(e)),
+            getPrevAndMa50(stockTicker, interval, ma50Options).catch(e => sendErrMsgToParentProc(e)),
         ])
-        .then(results => {
+        .then(async (results) => {
             let cciDataObj = results[0],
             macdLongDataObj = results[1],
             macdShortDataObj = results[2],
-            ultoscDataObj = results[3],
-            rsiDataObj = results[4],
-            stochSlowDataObj = results[5],
-            ma50DataObj = results[6],
+            // ultoscDataObj = results[3],
+            rsiDataObj = results[3],
+            stochSlowDataObj = results[4],
+            ma50DataObj = results[5],
             currMa50 = parseFloat(Object.values(ma50DataObj)[0]['SMA']),
             currAndPrevCl = extractCurrAndPrevClFromOhlcvData(ohlcvDataObj);
 
+            // await runGetBearTrendlines(db, stockTicker, stockName, 'RSI', rsiDataObj);
             process.stdout.write(`results for: ${stockTicker}:`);
             process.stdout.write(JSON.stringify(currAndPrevCl, null, 2));
             process.stdout.write('---------\n');
@@ -111,10 +118,11 @@ function startfurtherFilters(stockTicker, ohlcvDataObj) {
                 macdLongTwo : macdConditionTwo(macdLongDataObj, 'macd long'),
                 macdShortOne : macdConditionOne(macdShortDataObj, 'macd short'),
                 macdShortTwo : macdConditionTwo(macdShortDataObj, 'macd short'),
-                utlosc : ultoscLongsCondition(ultoscDataObj),
+                // utlosc : ultoscLongsCondition(ultoscDataObj),
                 rsi : rsisCondition(rsiDataObj),
+                rsi : rsisSecondCondition(rsiDataObj),
                 stochSlow : stochSlowCondition(stochSlowDataObj),
-                ma50 : ma50sCondition(ma50DataObj, currAndPrevCl)
+                ma50 : ma50sCondition(ma50DataObj, currAndPrevCl),
             }
 
             process.stdout.write(`conditionsResults for: ${stockTicker}:`);

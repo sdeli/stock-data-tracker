@@ -99,10 +99,10 @@ function macdConditionOne(macdDataObj, macdType) {
         let macdDataArr = Object.values(macdDataObj);
         let macdDataPointsArr = Object.keys(macdDataObj); 
 
-        let currFast = parseFloat(macdDataArr[0]['MACD_Signal']);
-        let currSlow = parseFloat(macdDataArr[0]['MACD']);
-        let prevFast = parseFloat(macdDataArr[1]['MACD_Signal']);
-        let prevSlow = parseFloat(macdDataArr[1]['MACD']);
+        let currFast = parseFloat(macdDataArr[0]['MACD']);
+        let currSlow = parseFloat(macdDataArr[0]['MACD_Signal']);
+        let prevFast = parseFloat(macdDataArr[1]['MACD']);
+        let prevSlow = parseFloat(macdDataArr[1]['MACD_Signal']);
 
         if (prevFast < prevSlow && currFast > currSlow) {
             let successMsg = `current condition for ${macdType}: \'prevFast < prevSlow && currFast > currSlow\' was true, please check by the details:\n\nprevFast: ${prevFast}\n\nprevSlow: ${prevSlow}\n\ncurrFast: ${currFast}\currSlow: ${currSlow}\n`;
@@ -142,8 +142,8 @@ function macdConditionTwo(macdDataObj, macdType) {
         let macdDataArr = Object.values(macdDataObj);
         let macdDataPointsArr = Object.keys(macdDataObj);
 
-        let currFast = parseFloat(macdDataArr[0]['MACD_Signal']);
-        let prevFast = parseFloat(macdDataArr[1]['MACD_Signal']);
+        let currFast = parseFloat(macdDataArr[0]['MACD']);
+        let prevFast = parseFloat(macdDataArr[1]['MACD']);
 
         if (prevFast < 0 && currFast > 0) {
             let successMsg = `current condition for ${macdType}: \n\n'prevFast < 0 && currFast > 0\n\n' was true, please check by the details:\n\nprevFast: ${prevFast}\n\ncurrFast: ${currFast}\n`;
@@ -252,6 +252,45 @@ function rsisCondition(rsiDataObj) {
     }
 }
 
+function rsisSecondCondition(rsiDataObj) {
+    if (!rsiDataObj) return false;
+
+    try {
+        let rsiDataArr = Object.values(rsiDataObj);
+        let rsiDataPointsArr = Object.keys(rsiDataObj);
+
+        let currRsi = parseFloat(rsiDataArr[0]['RSI']);
+        let prevRsi = parseFloat(rsiDataArr[1]['RSI']);
+
+        if (prevRsi < 69.1 && currRsi > 69.1) {
+            let successMsg = `rsi second condition: \n\n'prevRsi < 69.1 && currRsi > 69.1\n\n' was true, please check by the details:\n\nprevRsi: ${prevRsi}\n\ncurrRsi: ${currRsi}\n`;
+
+            let conditionsResult = {
+                successMsg,
+                datas : {
+                    prevRsi,
+                    currRsi,
+                    first6DataPoints : [
+                        rsiDataPointsArr[0],                       
+                        rsiDataPointsArr[1],                       
+                        rsiDataPointsArr[2],                       
+                        rsiDataPointsArr[3],                       
+                        rsiDataPointsArr[4],                       
+                        rsiDataPointsArr[5]                       
+                    ]
+                }
+            }
+
+            return conditionsResult;
+        } else {
+            return false;
+        }
+    } catch(e) {
+        process.stdout.write(JSON.stringify(e, null, 2));
+        return false;
+    }
+}
+
 function stochSlowCondition(stochSlowDataObj) {
     if (!stochSlowDataObj) return false;
 
@@ -260,11 +299,11 @@ function stochSlowCondition(stochSlowDataObj) {
         let stochSlowDataPointsArr = Object.keys(stochSlowDataObj);
 
         let currSlowK = parseFloat(stochSlowDataArr[0]['SlowK']);
-        let currSlowD = parseFloat(stochSlowDataArr[0]['SlowK']);
+        let currSlowD = parseFloat(stochSlowDataArr[0]['SlowD']);
         let prevSlowK = parseFloat(stochSlowDataArr[1]['SlowK']);
-        let prevSlowD = parseFloat(stochSlowDataArr[1]['SlowK']);
+        let prevSlowD = parseFloat(stochSlowDataArr[1]['SlowD']);
         
-        if ((currSlowK < 35) && (prevSlowK < prevSlowD && currSlowK > currSlowD)) {
+        if ((currSlowK > 10 && currSlowK < 50) && (prevSlowK < prevSlowD && currSlowK > currSlowD)) {
             let successMsg = `current condition: \n\n'currSlowK < 35) && (prevSlowK < prevSlowD && currSlowK > currSlowD\n\n' was true, please check by the details:\n\ncurrSlowK: ${currSlowK}\n\ncurrSlowD: ${currSlowD}\n\nprevSlowK: ${prevSlowK}\n\nprevSlowD: ${prevSlowD}\n`;
 
             let conditionsResult = {
@@ -344,6 +383,7 @@ module.exports = {
     ultoscLongsCondition,
     ccisCondition,
     rsisCondition,
+    rsisSecondCondition,
     stochSlowCondition,
     ma50sCondition,
     isCurrClOverCurrMa50

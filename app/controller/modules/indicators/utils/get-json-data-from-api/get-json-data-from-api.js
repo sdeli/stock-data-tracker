@@ -14,7 +14,7 @@ function getJsonDataFromApi(url, opts, callBack) {
         .then(apiKeyAndIpObj => {
             let {apiKey, ip, port} = JSON.parse(apiKeyAndIpObj);
             // process.stdout.write(apiKey);
-            // process.stdout.write(ip);
+            // process.stdout.write('\n' + ip + '\n');
             // process.stdout.write(port);
             return sendRequest(url, apiKey, ip, port, callBack);
         })

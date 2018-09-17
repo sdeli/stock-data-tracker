@@ -13,8 +13,6 @@ function savePositiveSignalsIntoDb(db, stockTicker, filtersResults) {
         updateStockSignalDocInDb(db, stockTicker, filtersResults)
         .then(updatedStockSignalDoc => {
             if (updatedStockSignalDoc !== 'there has been no such doc in db') {
-                process.stdout.write('updated doc --------------');
-                process.stdout.write(updatedStockSignalDoc);
                 process.stdout.write('signal updated to existing doc in db - doc above');
                 resolve(updatedStockSignalDoc);
                 return;
@@ -26,8 +24,6 @@ function savePositiveSignalsIntoDb(db, stockTicker, filtersResults) {
         .then(insertedStockSignalObj => {
             let wasUpdateSuccesfulInPrevPromise = typeof insertedStockSignalObj === 'undefined';
             if (!wasUpdateSuccesfulInPrevPromise) {
-                process.stdout.write('new doc ------------------');
-                process.stdout.write(insertedStockSignalObj);
                 process.stdout.write('signal has been inserted new doc has been created - doc above');
                 resolve(insertedStockSignalObj);
             }
