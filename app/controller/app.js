@@ -1,12 +1,7 @@
 const fs = require('fs');
 const spawn = require('child_process').spawn;
 
-const MongoClient = require('mongodb').MongoClient;
-
 const stocksArr = JSON.parse(fs.readFileSync('./assets/zolis-stock-tickers-for-usa.json', 'UTF-8'));
-
-const dbName = 'stock-data';
-const dbUrl = `mongodb://localhost:27017/${dbName}`;
 
 let stockIterator = 0;
 
@@ -53,7 +48,7 @@ function spawnNewProcessForFilter(stockObj, stockIterator) {
 
     let program = 'node';
     let parameters = [
-        // '--inspect-brk',
+        //'--inspect-brk',
         './modules/processes/buy-sign-one-long-filter-proc.js',
         `stockTicker=${stockTicker}`,
         `stockName=${stockName}`

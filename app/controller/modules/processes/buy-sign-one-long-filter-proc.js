@@ -8,7 +8,7 @@ const checkIfStockSignalProperToSend = require('../filters/buy-signal-one-long-f
 const sendFilteredStockSignalEmailToZoltan = require('../send-email/send-stock-signal-email-to-zoltan/send-stock-signal-email-to-zoltan.js');
 
 const dbName = 'stock-data';
-const dbUrl = `mongodb://localhost:27017/${dbName}`;
+const dbUrl = `mongodb://sdeli:bgfkszm1234@ds161102.mlab.com:61102/${dbName}`;
 
 const processArgs = argvExtractor(process.argv);
 const stockTicker = processArgs.stockTicker;

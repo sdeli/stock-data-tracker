@@ -15,9 +15,15 @@ function get3DescendingMaxPointsInData(stockDataArr, dataPointSign) {
         let stockDataForNextMaxPoint = stockDataArr.slice(0, untilTheLastDataPoint);
 
         let nextDescHighestPoint = getMaxPointFromStockdataArr(stockDataForNextMaxPoint, dataPointSign);
-        twoDescMaxPointsArr.push(nextDescHighestPoint);
+        let isMaxPointAPeak = checkIfPeak(nextDescHighestPoint, stockDataArr, dataPointSign);
 
-        return twoDescMaxPointsArr;    
+        if (isMaxPointAPeak) {
+            twoDescMaxPointsArr.push(nextDescHighestPoint);
+            return twoDescMaxPointsArr;    
+        } else {
+            process.stderr.write('second max point is not a proper peak')
+            return 'second max point is not a proper peak';
+        }
     } else {
         return 'after first high not enough days';
     }
@@ -26,19 +32,38 @@ function get3DescendingMaxPointsInData(stockDataArr, dataPointSign) {
 function getMaxPointFromStockdataArr(stockDataArr, dataPointSign) {
     let maxPointObj = stockDataArr.reduce((maxPointObj, stockValue, i) => {
         let currStockValue = parseFloat(stockValue[dataPointSign]);
-        if (true) {
-            if (maxPointObj.stockValue <= currStockValue) {
-                return {
-                    stockValue : currStockValue,
-                    dataPoint : i
-                }
-            } else {
-                return maxPointObj;
+        let isCurrPointHigherThanPrev = maxPointObj.stockValue <= currStockValue;
+
+        if (isCurrPointHigherThanPrev) {
+            return {
+                stockValue : currStockValue,
+                dataPoint : i
             }
+        } else {
+            return maxPointObj;
         }
     }, {stockValue : 0});
 
     return maxPointObj;
+}
+
+function checkIfPeak(nextDescHighestPoint, stockDataArr, dataPointSign) {
+    let isNotLastDataPoint = nextDescHighestPoint.dataPoint > 2;
+
+    if (isNotLastDataPoint) {
+        let following3DataPoints = stockDataArr.slice(nextDescHighestPoint.dataPoint - 3, nextDescHighestPoint.dataPoint);
+        let isHigherThenNext3 = following3DataPoints.every(datapoint => {
+            return parseFloat(datapoint[dataPointSign]) < nextDescHighestPoint.stockValue;
+        })
+
+        if (isHigherThenNext3) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }
 
 module.exports = get3DescendingMaxPointsInData

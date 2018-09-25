@@ -130,8 +130,11 @@ function getBearTrendLine(stockData, datesArr, dataPointSign, pastTrendlines) {
     if (stockData.length <= 15) return 'not enough days';
     // twoDescMaxPointsArr means the 2 descending maximum values and their datapoints which are constituting the downvard strightline/bear trendline, we are looking for
     let twoDescMaxPointsArr = get2DescendingMaxPointsInData(stockData, dataPointSign);
+    
+    let haveProper2DescMaxPoints = twoDescMaxPointsArr !== 'after first high not enough days';
+    haveProper2DescMaxPoints &= twoDescMaxPointsArr !== 'second max point is not a proper peak';
 
-    if (twoDescMaxPointsArr !== 'after first high not enough days' && pastTrendlines) {
+    if (haveProper2DescMaxPoints && pastTrendlines) {
         haveTheseTrendlinePointsAlready = checkIfWeHaveAlreadyTheseMaxPoints(pastTrendlines, twoDescMaxPointsArr);
 
         if (!haveTheseTrendlinePointsAlready) {
@@ -140,7 +143,7 @@ function getBearTrendLine(stockData, datesArr, dataPointSign, pastTrendlines) {
         } else {
             return 'in this timespan we have a same tl as before';
         }
-    } else if (twoDescMaxPointsArr !== 'after first high not enough days' && !pastTrendlines) {
+    } else if (haveProper2DescMaxPoints && !pastTrendlines) {
         let trendlineDataObj = createTrendlineDataObject(twoDescMaxPointsArr, datesArr)
         return trendlineDataObj;
     } else {

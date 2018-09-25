@@ -104,7 +104,7 @@ function startfurtherFilters(db, stockTicker, stockName, ohlcvDataObj) {
             currMa50 = parseFloat(Object.values(ma50DataObj)[0]['SMA']),
             currAndPrevCl = extractCurrAndPrevClFromOhlcvData(ohlcvDataObj);
 
-            // await runGetBearTrendlines(db, stockTicker, stockName, 'RSI', rsiDataObj);
+            await runGetBearTrendlines(db, stockTicker, stockName, 'RSI', rsiDataObj);
             process.stdout.write(`results for: ${stockTicker}:`);
             process.stdout.write(JSON.stringify(currAndPrevCl, null, 2));
             process.stdout.write('---------\n');
