@@ -45,7 +45,7 @@ function getTlsWhichBrokenOrNearlyBroken(allBearTrendlines, stockDataArr, stockN
             let {tlValueToday, tlValueYesterday} = getTlsValueTodayAndYesterday(trendlineObj);
 
             console.log('isTlNearlyBroken');
-            let isTlNearlyBroken = tlValueToday <= stockValueToday && tlValueToday >= (stockValueToday * 0.99)
+            let isTlNearlyBroken = stockValueToday <= tlValueToday &&  stockValueToday >= (tlValueToday* 0.99)
 
             if (isTlNearlyBroken) {
                 trendlineObj.successMSg = `The trendlineCondition for ${stockName}: 'tlValueToday <= stockValueToday && tlValueToday >= (stockValueToday * 0.99)' happend to be true, check the details:\ntlValueToday: ${tlValueToday}\nstockValueToday: ${stockValueToday}\nall details of the trendline: ${JSON.stringify(trendlineObj, null, 2)}`
