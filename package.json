@@ -9,18 +9,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "api-and-ip-feeder-server": "file:app/libs/api-and-ip-feeder-server",
     "cheerio": "^1.0.0-rc.2",
-    "chromedriver": "^2.41.0",
-    "geckodriver": "^1.12.2",
+    "conditions": "file:app/libs/conditions",
+    "config": "file:app/config",
+    "ejs": "^2.7.1",
+    "error-handler": "file:app/libs/error-handler",
+    "filters": "file:app/libs/filters",
+    "flash-messaging": "file:app/libs/flash-messaging",
+    "indicators": "file:app/libs/indicators",
+    "middlewares": "file:app/libs/middlewares",
     "mongodb": "^3.1.3",
     "nodemailer": "^4.6.8",
+    "past-trendlines-coll": "file:app/models/past-trendlines-coll",
     "puppeteer": "^1.7.0",
-    "save-dev": "^2.0.0",
-    "selenium-webdriver": "^4.0.0-alpha.1"
-  },
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "gulp": "^3.9.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "send-email": "file:app/libs/send-email",
+    "stock-tickers-with-signals-coll": "file:app/models/stock-tickers-with-signals-coll",
+    "utils": "file:app/libs/utils"
   }
 }

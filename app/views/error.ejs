@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include partials/_head.ejs %>
+<body>
+    <% include partials/_nav.ejs %>
+
+    <section class="container main">
+        <div class="row" title="flash messages">
+            <div class="col-12 col-md-8 offset-md-2">
+                <% include partials/_flash-messages.ejs %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mt-1 col-lg-8 offset-lg-2">
+                <h1>Error</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="sticky">
+        <% include partials/_footer.ejs %>
+    </section>
+
+    <% include partials/_scripts.ejs %>
+</body>
+</html>

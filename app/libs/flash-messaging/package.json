@@ -1,0 +1,11 @@
+{
+  "name": "flash-messaging",
+  "version": "1.0.0",
+  "description": "this module is intended to give the ability to add flash message to the current request and/or to the next one",
+  "main": "init-flash.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sandor Deli",
+  "license": "ISC"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "conditions",
+  "version": "1.0.0",
+  "main": "conditions.js",
+  "description": "this module contains helper functions, which are returning if a stock is worth for investment from the aspect of a certain indicator."
+}

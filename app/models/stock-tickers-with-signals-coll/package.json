@@ -1,0 +1,11 @@
+{
+  "name": "stock-tickers-with-signals-coll",
+  "version": "1.0.0",
+  "description": "",
+  "main": "stock-tickers-with-signals-coll.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
