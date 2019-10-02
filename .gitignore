@@ -1,5 +1,5 @@
 node_modules/
 test/
 /app/assets
-/app/logging/
+/app/logs/
 /test/
