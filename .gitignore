@@ -1,3 +1,4 @@
 node_modules/
 test/
 /app/assets
+/app/logging/
