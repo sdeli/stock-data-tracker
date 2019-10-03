@@ -1,6 +1,6 @@
 node_modules/
 test/
-/app/assets
+/app/assets/*
 !app/assets/authenticate.js
 /app/logs/
 /test/
