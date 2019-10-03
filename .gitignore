@@ -1,5 +1,8 @@
 node_modules/
 test/
 /app/assets
+!/app/assets/*.js
 /app/logs/
 /test/
+.idea
+package-lock.json
