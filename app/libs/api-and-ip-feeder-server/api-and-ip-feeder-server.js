@@ -1,8 +1,10 @@
 const http = require('http');
-
+const config = require('config');
 const apiKeyIpPortFeeder = require('./api-and-ip-feeder-obj/api-and-ip-feeder-obj.js');
 
-module.exports = apiAndIpFeederServer;
+const LISTEN_PORT = config.apiAndIpFeeder.listen;
+
+apiAndIpFeederServer();
 
 function apiAndIpFeederServer() {
     http.createServer(function (req, res) {
@@ -13,7 +15,7 @@ function apiAndIpFeederServer() {
         } else {
             respondWithInvalidCall(res);
         }
-    }).listen(8080);
+    }).listen(LISTEN_PORT);
 }
 
 function respondWithApiKeyIpAndPort(res) {

@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+*node_modules/
+*package-lock.json
+test
+app/assets/*
+!app/assets/authenticate.js
+!app/assets/strategy.js
+.*

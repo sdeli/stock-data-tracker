@@ -1,47 +1,30 @@
-// ==== Set up module linking ====
-const path = require('path');
-
-// ==== Npm Third Party Packages ====
+// ==== Set Up Environment ====
 const dotenv = require('dotenv');
+let dotenvObj = dotenv.config({ path: './.env.default' });
+if (dotenvObj.error) throw new Error(err);
+
+const path = require("path");
+// ==== Third Party Packages ====
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const validator = require('express-validator');
 const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
-
-// ==== Set Up Environment ====
-const config = require('config');
-
-let err = dotenv.config({ path: './.env.default' });
-if (err) throw new Error(err);
 
 // ==== Local Npm Modules ====
-const validator = require('express-validator');
+const config = require('config');
 const setUpPassportAuth = require('set-up-passport-auth');
 const flashMessaging = require('flash-messaging');
 const errorHandler = require('error-handler');
-const apiAndIpFeeder = require('api-and-ip-feeder-server');
+const { startApyKeyIpPortfeederServer } = require("utils");
+const stockDataTrackerServer = require('stock-data-tracker-server');
 
 // ==== Constants ====
-const FOUR_O_FOUR__ID = config.templateConf.fourOFour.id;
-const FOUR_O_FOUR__EP = config.restEndpoints.error.replace(/(.*\/)(:\w+)/, `$1${FOUR_O_FOUR__ID}`);
-
-// ==== Routers ====
-const runIsWorthForInvestmentForAllStocks = require('./controllers/run-is-worth-for-investment-for-all-stocks/run-is-worth-for-investment-for-all-stocks.js');
+const FOUR_O_FOUR__EP = config.eps.fourOfour;
 
 // ==== App Setup ====
 let app = express();
+
 app.use(validator());
-
-const options = {
-    host: process.env.DB_HOST,
-    port: 3306,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    clearExpired: true,
-};
-
-const sessionStore = new MySQLStore(options);
 
 app.use(session({
     secret: config.expressSession.salt,
@@ -62,8 +45,9 @@ app.use(flashMessaging);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(runIsWorthForInvestmentForAllStocks);
-app.use(errorRouter);
+app.use('/', (req, res) => {
+    res.send("yeah");
+});
 
 app.use((req, res) => {
     console.log(req.url);
@@ -84,5 +68,6 @@ app.use((req, res) => {
 // ==== Err Handling ====
 app.use(errorHandler);
 
-apiAndIpFeeder();
-app.listen(4000);
+// startApyKeyIpPortfeederServer();
+// stockDataTrackerServer();
+app.listen(config.listen);

@@ -1,5 +1,4 @@
 {
   "name": "api-and-ip-feeder-server",
-  "version": "1.0.0",
-  "main": "api-and-ip-feeder-server.js"
+  "version": "1.0.0"
 }

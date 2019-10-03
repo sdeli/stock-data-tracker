@@ -1,0 +1,10 @@
+{
+  "name": "stock-data-tracker-server",
+  "version": "1.0.0",
+  "main": "stock-data-tracker-server.js",
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "mongodb": "^3.3.2",
+    "stock-data-tracker-server-utils": "file:modules/stock-data-tracker-server-utils"
+  }
+}

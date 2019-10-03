@@ -1,4 +1,3 @@
-const MongoClient = require('mongodb').MongoClient;
 const argvExtractor = require('./modules/argv-extractor/argv-extractor.js');
 const { sendErrMsgToParentProc } = require('utils');
 
@@ -12,8 +11,8 @@ const processArgs = argvExtractor(process.argv);
 const stockTicker = processArgs.stockTicker;
 const stockName = processArgs.stockName;
 
-MongoClient.connect(dbUrl, { useNewUrlParser: true }, (err, client) => {
-    if (err) throw err;
+(async () => {
+    const client = await getMongDbConn(dbUrl);
     const db = client.db('stock-data');
 
     runBuySignOneLongFilter(db, stockTicker, stockName)
@@ -22,8 +21,8 @@ MongoClient.connect(dbUrl, { useNewUrlParser: true }, (err, client) => {
     })
     .catch(() => {
         client.close();
-    })
-});
+    });
+})();
 
 function runBuySignOneLongFilter(db, stockTicker, stockName) {
     return new Promise((resolve, reject) => {

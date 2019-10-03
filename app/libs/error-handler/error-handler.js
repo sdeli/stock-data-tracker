@@ -1,15 +1,15 @@
 const config = require('config');
 const fs = require('fs');
 
-const ERR_LOG_FILE__PATH = `${process.cwd()}/${config.errHandling.errLogRelativeFilePath}`,
+const ERR_LOG_FILE__PATH = config.logs.errPath,
     NODE_ENV = process.env.NODE_ENV,
-    FIVE_O_ONE__ID = config.templateConf.fiveOOne.id;
-    FIVE_O_ONE__EP = config.restEndpoints.error.replace(/(.*\/)(:\w+)/, `$1${FIVE_O_ONE__ID}`);
+    FIVE_O_ONE__EP = config.eps.fiveOOne;
 
 module.exports = errorHandler;
 
 function errorHandler(err, req, res, next) {
     let notErrWith404View = !Boolean(err.fourOfourErr);
+
     if (NODE_ENV === 'development' && req && res && notErrWith404View) {
         console.log(err.name);
         console.log(err.stack);
