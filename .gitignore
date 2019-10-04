@@ -2,6 +2,7 @@ node_modules/
 test/
 /app/assets/*
 !app/assets/*.js
+/app/www/*
 /app/logs/
 /test/
 .idea
