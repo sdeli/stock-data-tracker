@@ -5,5 +5,5 @@ test/
 /app/logs/
 /test/
 .idea
-package-lock.json
+*package-lock.json*
 app/config/config.js
