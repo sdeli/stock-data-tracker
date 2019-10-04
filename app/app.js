@@ -18,8 +18,11 @@ const errorHandler = require('error-handler');
 const { startApyKeyIpPortfeederServer } = require("utils");
 const stockDataTrackerServer = require('stock-data-tracker-server');
 
+const getLoginView = require("./controllers/get-log-in-view/get-log-in-view");
+
 // ==== Constants ====
-const FOUR_O_FOUR__EP = config.eps.fourOfour;
+const FOUR_O_FOUR__EP = config.eps.fourOfour,
+    GET_LOGIN_VIEW_EP = config.eps.logIn;
 
 // ==== App Setup ====
 let app = express();
@@ -28,9 +31,8 @@ app.use(validator());
 
 app.use(session({
     secret: config.expressSession.salt,
-    resave: config.expressSession.resave,
+    resave: config.expressSession.reSave,
     cookie: { path: '/', httpOnly: true, secure: false, maxAge: null },
-    store: sessionStore,
     saveUninitialized: config.expressSession.saveUninitialized
 }));
 
@@ -45,9 +47,8 @@ app.use(flashMessaging);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use('/', (req, res) => {
-    res.send("yeah");
-});
+// ==== routers ====
+app.get(GET_LOGIN_VIEW_EP, getLoginView);
 
 app.use((req, res) => {
     console.log(req.url);
@@ -71,3 +72,4 @@ app.use(errorHandler);
 // startApyKeyIpPortfeederServer();
 // stockDataTrackerServer();
 app.listen(config.listen);
+console.log('up & running');
