@@ -20,7 +20,7 @@
     "error-handler": "file:app/libs/error-handler",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
-    "express-validator": "^5.3.0",
+    "express-validator": "5.3.0",
     "filters": "file:app/libs/filters",
     "flash-messaging": "file:app/libs/flash-messaging",
     "indicators": "file:app/libs/indicators",
