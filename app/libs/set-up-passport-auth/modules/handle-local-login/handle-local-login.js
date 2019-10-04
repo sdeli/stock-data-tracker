@@ -1,7 +1,6 @@
-const userModel = require('models/user-model');
 const bcrypt = require('bcryptjs');
 
-module.exports = handleLocalLogin;
+modules.exports = handleLocalLogin;
 
 function handleLocalLogin(email, currPwd, rememberLoginBox = false, isTmpPwdLogin = false, done) {
     let currUserObj = {

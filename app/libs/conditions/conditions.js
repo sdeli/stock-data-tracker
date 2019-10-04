@@ -1,5 +1,19 @@
 const getVolume50 = require('indicators').ma50;
 
+module.exports = {
+    checkIfClOver10DollarsInMa20,
+    checkIfStocksVolumeIsEnough,
+    macdConditionOne,
+    macdConditionTwo,
+    ultoscLongsCondition,
+    ccisCondition,
+    rsisCondition,
+    rsisSecondCondition,
+    stochSlowCondition,
+    ma50sCondition,
+    isCurrClOverCurrMa50
+};
+
 function checkIfStocksVolumeIsEnough(ohlcvDataObj) {
     return getVolume50(ohlcvDataObj) > 1000000;
 }
@@ -54,7 +68,7 @@ function ccisCondition(cciDataObj) {
 
     try {
         let cciDataArr = Object.values(cciDataObj);
-        let cciDataPointsArr = Object.keys(cciDataObj); 
+        let cciDataPointsArr = Object.keys(cciDataObj);
 
         let currCci = parseFloat(cciDataArr[0]['CCI']);
         let prevCci = parseFloat(cciDataArr[1]['CCI']);
@@ -68,12 +82,12 @@ function ccisCondition(cciDataObj) {
                     prevCci,
                     currCci,
                     first6DataPoints : [
-                        cciDataPointsArr[0],                       
-                        cciDataPointsArr[1],                       
-                        cciDataPointsArr[2],                       
-                        cciDataPointsArr[3],                       
-                        cciDataPointsArr[4],                       
-                        cciDataPointsArr[5]                    
+                        cciDataPointsArr[0],
+                        cciDataPointsArr[1],
+                        cciDataPointsArr[2],
+                        cciDataPointsArr[3],
+                        cciDataPointsArr[4],
+                        cciDataPointsArr[5]
                     ]
                 }
             }
@@ -93,7 +107,7 @@ function macdConditionOne(macdDataObj, macdType) {
 
     try {
         let macdDataArr = Object.values(macdDataObj);
-        let macdDataPointsArr = Object.keys(macdDataObj); 
+        let macdDataPointsArr = Object.keys(macdDataObj);
 
         let currFast = parseFloat(macdDataArr[0]['MACD']);
         let currSlow = parseFloat(macdDataArr[0]['MACD_Signal']);
@@ -111,12 +125,12 @@ function macdConditionOne(macdDataObj, macdType) {
                     currFast,
                     currSlow,
                     first6DataPoints : [
-                        macdDataPointsArr[0],                       
-                        macdDataPointsArr[1],                       
-                        macdDataPointsArr[2],                       
-                        macdDataPointsArr[3],                       
-                        macdDataPointsArr[4],                       
-                        macdDataPointsArr[5]                       
+                        macdDataPointsArr[0],
+                        macdDataPointsArr[1],
+                        macdDataPointsArr[2],
+                        macdDataPointsArr[3],
+                        macdDataPointsArr[4],
+                        macdDataPointsArr[5]
                     ]
                 }
             };
@@ -150,12 +164,12 @@ function macdConditionTwo(macdDataObj, macdType) {
                     prevFast,
                     currFast,
                     first6DataPoints : [
-                        macdDataPointsArr[0],                       
-                        macdDataPointsArr[1],                       
-                        macdDataPointsArr[2],                       
-                        macdDataPointsArr[3],                       
-                        macdDataPointsArr[4],                       
-                        macdDataPointsArr[5]                       
+                        macdDataPointsArr[0],
+                        macdDataPointsArr[1],
+                        macdDataPointsArr[2],
+                        macdDataPointsArr[3],
+                        macdDataPointsArr[4],
+                        macdDataPointsArr[5]
                     ]
                 }
             };
@@ -190,12 +204,12 @@ function ultoscLongsCondition(ultoscDataObj) {
                     currUltosc,
                 },
                 first6DataPoints : [
-                    ultoscDataPointsArr[0],                       
-                    ultoscDataPointsArr[1],                       
-                    ultoscDataPointsArr[2],                       
-                    ultoscDataPointsArr[3],                       
-                    ultoscDataPointsArr[4],                       
-                    ultoscDataPointsArr[5]                       
+                    ultoscDataPointsArr[0],
+                    ultoscDataPointsArr[1],
+                    ultoscDataPointsArr[2],
+                    ultoscDataPointsArr[3],
+                    ultoscDataPointsArr[4],
+                    ultoscDataPointsArr[5]
                 ]
             };
 
@@ -228,12 +242,12 @@ function rsisCondition(rsiDataObj) {
                     prevRsi,
                     currRsi,
                     first6DataPoints : [
-                        rsiDataPointsArr[0],                       
-                        rsiDataPointsArr[1],                       
-                        rsiDataPointsArr[2],                       
-                        rsiDataPointsArr[3],                       
-                        rsiDataPointsArr[4],                       
-                        rsiDataPointsArr[5]                       
+                        rsiDataPointsArr[0],
+                        rsiDataPointsArr[1],
+                        rsiDataPointsArr[2],
+                        rsiDataPointsArr[3],
+                        rsiDataPointsArr[4],
+                        rsiDataPointsArr[5]
                     ]
                 }
             };
@@ -267,12 +281,12 @@ function rsisSecondCondition(rsiDataObj) {
                     prevRsi,
                     currRsi,
                     first6DataPoints : [
-                        rsiDataPointsArr[0],                       
-                        rsiDataPointsArr[1],                       
-                        rsiDataPointsArr[2],                       
-                        rsiDataPointsArr[3],                       
-                        rsiDataPointsArr[4],                       
-                        rsiDataPointsArr[5]                       
+                        rsiDataPointsArr[0],
+                        rsiDataPointsArr[1],
+                        rsiDataPointsArr[2],
+                        rsiDataPointsArr[3],
+                        rsiDataPointsArr[4],
+                        rsiDataPointsArr[5]
                     ]
                 }
             };
@@ -298,7 +312,7 @@ function stochSlowCondition(stochSlowDataObj) {
         let currSlowD = parseFloat(stochSlowDataArr[0]['SlowD']);
         let prevSlowK = parseFloat(stochSlowDataArr[1]['SlowK']);
         let prevSlowD = parseFloat(stochSlowDataArr[1]['SlowD']);
-        
+
         if ((currSlowK > 10 && currSlowK < 50) && (prevSlowK < prevSlowD && currSlowK > currSlowD)) {
             let successMsg = `current condition: \n\n'currSlowK < 35) && (prevSlowK < prevSlowD && currSlowK > currSlowD\n\n' was true, please check by the details:\n\ncurrSlowK: ${currSlowK}\n\ncurrSlowD: ${currSlowD}\n\nprevSlowK: ${prevSlowK}\n\nprevSlowD: ${prevSlowD}\n`;
 
@@ -311,12 +325,12 @@ function stochSlowCondition(stochSlowDataObj) {
                     prevSlowD
                 },
                 first6DataPoints : [
-                    stochSlowDataPointsArr[0],                       
-                    stochSlowDataPointsArr[1],                       
-                    stochSlowDataPointsArr[2],                       
-                    stochSlowDataPointsArr[3],                       
-                    stochSlowDataPointsArr[4],                       
-                    stochSlowDataPointsArr[5]                       
+                    stochSlowDataPointsArr[0],
+                    stochSlowDataPointsArr[1],
+                    stochSlowDataPointsArr[2],
+                    stochSlowDataPointsArr[3],
+                    stochSlowDataPointsArr[4],
+                    stochSlowDataPointsArr[5]
                 ]
             };
 
@@ -332,8 +346,8 @@ function stochSlowCondition(stochSlowDataObj) {
 
 function ma50sCondition(ma50DataObj, currAndPrevClObj) {
     if (!ma50DataObj) return false;
-    
-    try { 
+
+    try {
         let ma50DataArr = Object.values(ma50DataObj);
         let ma50DataPointsArr = Object.keys(ma50DataObj);
 
@@ -352,12 +366,12 @@ function ma50sCondition(ma50DataObj, currAndPrevClObj) {
                     prevCl,
                 },
                 first6Ma50DataPoints : [
-                    ma50DataPointsArr[0],                       
-                    ma50DataPointsArr[1],                       
-                    ma50DataPointsArr[2],                       
-                    ma50DataPointsArr[3],                       
-                    ma50DataPointsArr[4],                       
-                    ma50DataPointsArr[5]                       
+                    ma50DataPointsArr[0],
+                    ma50DataPointsArr[1],
+                    ma50DataPointsArr[2],
+                    ma50DataPointsArr[3],
+                    ma50DataPointsArr[4],
+                    ma50DataPointsArr[5]
                 ]
             };
 
@@ -370,17 +384,3 @@ function ma50sCondition(ma50DataObj, currAndPrevClObj) {
         return false;
     }
 }
-
-module.exports = {
-    checkIfClOver10DollarsInMa20,
-    checkIfStocksVolumeIsEnough,
-    macdConditionOne,
-    macdConditionTwo,
-    ultoscLongsCondition,
-    ccisCondition,
-    rsisCondition,
-    rsisSecondCondition,
-    stochSlowCondition,
-    ma50sCondition,
-    isCurrClOverCurrMa50
-};
