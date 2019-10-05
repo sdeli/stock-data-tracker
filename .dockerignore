@@ -5,4 +5,5 @@ test
 app/assets/*
 !app/assets/authenticate.js
 !app/assets/strategy.js
+app/www*
 .*

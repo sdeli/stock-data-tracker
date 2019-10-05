@@ -3,6 +3,7 @@ COPY . /stock-data-tracker
 WORKDIR /stock-data-tracker
 RUN ["ls", "-la"]
 RUN ["ls", "-la", "./app/assets"]
+RUN ["ls", "-la", "./app"]
 RUN ["npm", "i", "-g", "recursive-install"]
 RUN ["npm", "install", "-g", "pm2"]
 RUN npm install && npm-recursive-install --rootDir=./app/libs

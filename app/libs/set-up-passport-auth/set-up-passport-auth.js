@@ -25,7 +25,6 @@ function setUpPassportAuth(app) {
             usernameField: 'email',
             passwordField: 'password',
             rememberLogin: 'rememberLogin',
-            isTmpPwdLogin: 'isTmpPwdLogin'
     }, handleLocalLogin));
 
     passport.serializeUser((user, done) => {

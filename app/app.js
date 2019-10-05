@@ -1,7 +1,7 @@
 // ==== Set Up Environment ====
 const dotenv = require('dotenv');
 let dotenvObj = dotenv.config({ path: './.env.default' });
-if (dotenvObj.error) throw new Error(err);
+if (dotenvObj.error) throw new Error(dotenvObj.error);
 
 const path = require("path");
 // ==== Third Party Packages ====
@@ -18,11 +18,12 @@ const errorHandler = require('error-handler');
 const { startApyKeyIpPortfeederServer } = require("utils");
 const stockDataTrackerServer = require('stock-data-tracker-server');
 
-const getLoginView = require("./controllers/get-log-in-view/get-log-in-view");
+const authRouter = require('./routers/auth-router/auth-router');
+const applicationRouter = require('./routers/application-router/application-router');
+const errorRouter = require('./routers/error-router/error-router');
 
 // ==== Constants ====
-const FOUR_O_FOUR__EP = config.eps.fourOfour,
-    GET_LOGIN_VIEW_EP = config.eps.logIn;
+const FOUR_O_FOUR__EP = config.eps.fourOfour;
 
 // ==== App Setup ====
 let app = express();
@@ -48,7 +49,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // ==== routers ====
-app.get(GET_LOGIN_VIEW_EP, getLoginView);
+app.use(authRouter);
+app.use(applicationRouter);
+app.use(errorRouter);
 
 app.use((req, res) => {
     console.log(req.url);

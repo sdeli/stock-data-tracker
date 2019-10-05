@@ -3,7 +3,7 @@ const config = require('config');
 const LOGIN_VIEW__PATH = config.viewPathes.logIn.replace("/", ''),
     LOGIN_VIEW__TITLE = config.templateConf.logIn.title,
     LOGIN_VIEW__ID = config.templateConf.logIn.id,
-    LOGIN__EP = config.eps.logIn;
+    LOGIN__EP = config.eps.auth.oAuth.local.login;
 
 module.exports = getLoginView;
     
