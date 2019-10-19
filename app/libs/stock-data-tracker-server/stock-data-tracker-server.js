@@ -8,7 +8,7 @@ const USER_HAS_RUNNING_PROCESS__ERR_MSG = config.stockDataTracker.msgs.userHasRu
 const REGION_IS_NOT_VALID__ERR_MSG = config.stockDataTracker.msgs.regionIsNotValid;
 const STOCKS_OBJ = config.stockDataTracker.sotckTickers;
 const NODE_EXECUTABLE = config.nodeExecutable;
-const LISTEN = config.stockDataTracker.listen;
+const LISTEN_PORT = config.stockDataTracker.listen;
 
 let hasRunningStockTarcking = false;
 
@@ -40,7 +40,7 @@ function stockDataTrackerServer() {
             res.writeHead(404, { 'Content-Type': 'text/plain' });
             res.end("not found");
         }
-    }).listen(LISTEN);
+    }).listen(LISTEN_PORT);
 }
 
 async function runFilterOnAllStockTickers(stockIterator, region) {
