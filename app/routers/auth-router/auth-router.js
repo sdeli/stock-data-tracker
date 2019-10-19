@@ -9,7 +9,7 @@ const { requireBeAuthenticated, redirectIfLoggedIn} = require('middlewares');
 
 const FAILED_LOGIN__ERR_FLASH = config.flashMsgs.auth.localLogin.err,
     MONTH__MIL_SECS = 3600000 * 24 * 30,
-    GET_LOGIN_VIEW_EP = config.eps.auth.logInView;
+    GET_LOGIN_VIEW__EP = config.eps.auth.logInView;
 
 authRouter.get(config.eps.auth.logInView, getLoginView);
 
@@ -25,7 +25,7 @@ authRouter.get(config.eps.auth.oAuth.failureRed, redirectIfLoggedIn, (req, res) 
     res.flash.toNext(res.flash.WARNING, FAILED_LOGIN__ERR_FLASH);
     req.session.body = req.session.failedUser;
     delete req.session.failedUser;
-    res.redirect(GET_LOGIN_VIEW_EP)
+    res.redirect(GET_LOGIN_VIEW__EP)
 });
 
 authRouter.get(config.eps.auth.oAuth.succRed, requireBeAuthenticated, (req, res) => {
@@ -44,7 +44,7 @@ authRouter.get(config.eps.auth.oAuth.succRed, requireBeAuthenticated, (req, res)
     }
 });
 
-authRouter.get(config.eps.auth.logOut, requireBeAuthenticated, (req, res, next) => {
+authRouter.get(config.eps.auth.oAuth.local.logOut, requireBeAuthenticated, (req, res, next) => {
     req.logout();
 
     req.session.regenerate((err) => {

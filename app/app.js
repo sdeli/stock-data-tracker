@@ -72,7 +72,7 @@ app.use((req, res) => {
 // ==== Err Handling ====
 app.use(errorHandler);
 
-// startApyKeyIpPortfeederServer();
-// stockDataTrackerServer();
+startApyKeyIpPortfeederServer();
+stockDataTrackerServer();
 app.listen(config.listen);
 console.log('up & running');

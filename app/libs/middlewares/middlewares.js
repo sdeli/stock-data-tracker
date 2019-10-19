@@ -12,7 +12,7 @@ module.exports = {
 
 function requireBeAuthenticated(req, res, next) {
     console.log(req.url);
-    let isLoggedIn = req.isAuthenticated() && !req.user.isTmp;
+    let isLoggedIn = req.isAuthenticated();
     if (isLoggedIn) return next();
 
     res.flash.toNext(res.flash.WARNING, REQUIRE_LOG_IN__MSG);

@@ -3,6 +3,7 @@ module.exports = {
         name: "test.stock-data-tracker.com",
         script: "./app.js",
         watch: true,
-        node_args: "--inspect-brk=0.0.0.0:5858"
+        ignore_watch: ["node_modules", "app/www",  "app/logs", "nginx-log"],
+        node_args: "--inspect-brk=0.0.0.0:5858",
     }]
 };

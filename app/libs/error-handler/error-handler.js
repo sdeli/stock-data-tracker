@@ -16,6 +16,7 @@ function errorHandler(err, req, res, next) {
         res.status(500).json(err);
     } else if (NODE_ENV === 'development' && req  && !res && notErrWith404View) {
         console.log(err.stack);
+        redirectTo501(req, res);
     } else if (NODE_ENV === 'production' && req  && !res && notErrWith404View) {
         let errText = getErrorText(req, err);
         logErr(errText);
