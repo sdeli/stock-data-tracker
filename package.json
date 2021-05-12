@@ -26,7 +26,7 @@
     "indicators": "file:app/libs/indicators",
     "middlewares": "file:app/libs/middlewares",
     "mongodb": "^3.1.3",
-    "nodemailer": "^4.6.8",
+    "nodemailer": "^6.4.16",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
     "passport-google-oauth20": "^1.0.0",
